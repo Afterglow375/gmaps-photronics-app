@@ -1,0 +1,165 @@
+@CHARSET "ISO-8859-1";
+html { 
+	height: 100% 
+}
+
+body { 
+	height: 100%; 
+	margin: 0; 
+	padding: 0 
+}
+
+.infowindow {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#map-canvas { 
+	height: 100%; 
+}
+
+#dbl-click-modal .modal-body {
+	text-indent: 15px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+#dbl-click-modal .modal-footer {
+	text-indent: 15px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	text-align: left;
+}
+
+#dbl-click-modal .modal-body div {
+	text-indent: 5em;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 10px;
+}
+
+#dbl-click-modal .modal-footer div {
+	text-indent: 5em;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 10px;
+}
+
+#dbl-click-modal .modal-elem-mouseover {
+	background: #EEEEEE;
+	cursor: pointer;
+}
+
+#dbl-click-modal hr {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#dbl-click-modal .modal-elem-wrapper { 
+	padding: 0px 15px 0px 15px;
+}
+
+#dbl-click-modal .modal-body h4 {
+	margin-top: 25px;
+	margin-bottom: 25px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+#dbl-click-modal .modal-footer h4 {
+	margin-top: 25px;
+	margin-bottom: 25px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+h1, .marker-numbers {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: default;
+}
+
+#dbl-click-modal .modal-elem-wrapper a {
+	cursor: pointer;
+}
+
+#plate-log-modal .modal-body {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+#reject-copy-status .modal-body {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+#plate-modal .modal-footer {
+	margin-top: 0px;
+}
+
+#code-editor-modal .modal-body {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+#code-editor-modal .modal-footer {
+	margin-top: 0px;
+}
+
+#xml-error {
+	padding-bottom: 0px;
+	text-indent: 0em;
+	line-height:34px;
+	float:left;
+	color: red;
+}
+
+#xml-history-buttons {
+	padding-bottom: 0px;
+	float: right;
+}
+
+.no-margin-padding {
+	padding: 0px;
+	margin: 0px;
+	border: none;
+	overflow: auto;
+}
+
+caption {
+	padding: 5px;
+	font-size: 28px;
+	text-align: left;
+	padding-left: 15px;
+}	
+
+.modal.fade {
+    -webkit-transition: opacity .2s linear, none;
+    -moz-transition: opacity .2s linear, none;
+    -ms-transition: opacity .2s linear, none;
+    -o-transition: opacity .2s linear, none;
+    transition: opacity .2s linear, none;
+    top: 0%;
+}

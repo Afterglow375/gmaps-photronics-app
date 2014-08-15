@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Documentation</title>
+
+		<link rel="stylesheet" type="text/css" href="WebContent/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="WebContent/css/codemirror.css">
+		<script type="text/javascript" src="WebContent/js/codemirror.js"> </script>
+		<script type="text/javascript" src="WebContent/js/xml.js"></script>  <!-- Used to style XML in CodeMirror (syntax highlighting) -->
+
+		<style type="text/css">
+
+		body {
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+			padding: 20px;
+		}
+
+		#header {
+			text-align: center;
+		}
+
+		#footer {
+			text-align: right;
+		}
+
+		</style>
+	</head>
+
+	<body>
+		<h1 id="header">Photronics Data Transfer Visualizer Documentation</h1>
+
+		<h2>Overview:</h2>
+
+		This webapp allows a user to view the various plate data transfers among global sites at Photronics. 
+		The app refreshes its data every 30 seconds, providing a pseudo-real time view of the transfers.
+		The app.jsp file functions as the home page, relying on map.js as the primary source of javascript logic.
+		The Java files are called with AJAX from map.js to interact with the Oracle database in the backend.
+		The app is intended to run on a Tomcat 6 webserver.
+		It was constructed in the Eclipse IDE.
+
+		<h2>How to Build:</h2>
+		<p>Built with <a href="http://maven.apache.org/">Apache Maven 3.2.2</a></p>
+		Build to a <a href="http://en.wikipedia.org/wiki/WAR_(file_format)">war file</a> using the package phase, i.e.
+		<br> <span style="font-family: Lucida Console"> > mvn clean package </span>
+		<p>All the necessary files for the webapp will be in the resulting war file.</p>
+
+		<h2>How to Deploy:</h2>
+
+		Manually move the war file to your tomcat/webapps folder. <a href="http://tomcat.apache.org/tomcat-6.0-doc/deployer-howto.html">See here for additional details</a>.
+		<p>You can also perhaps set up the pom.xml so maven can handle automatic deployment.</p>
+
+		<h2>External Libraries:</h2>
+
+		This app relies on a variety of outside code.
+
+		<ul>
+			<li><a href="https://developers.google.com/maps/documentation/javascript/tutorial">Google maps API V3</a></li>
+			<li><a href="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/docs/reference.html">InfoBox</a> - for the numbers next to each marker on the google map</li>
+			<li><a href="http://jquery.com/">JQuery 1.11.1</a> - DOM manipulation</li>
+			<li><a href="http://codemirror.net/index.html">CodeMirror 4.3</a> - provides an in-browser code editor</li>
+			<li><a href="http://getbootstrap.com/getting-started">Twitter Bootstrap V3</a> - html/css components for look and feel</li>
+			<li><a href="https://github.com/jschr/bootstrap-modal">Bootstrap Modal V2.2.5</a> - extends upon the limited Bootstrap modal</li>
+		</ul>
+
+		<h2>About the AJAX Calls:</h2>
+		This application relies on using AJAX to refresh the data without having to reload the whole webpage. 
+		The AJAX calls use POST and GET requests to Java servlets, which in turn uses SQL queries via JDBC to interact with the Oracle database.
+		During the timed interval refresh which occurs every 30 seconds, the map and the double click modal will update.
+		However, the other modals such as the "View and Edit XML History" modal will not refresh.
+		
+		<h2>XML Input Explanation:</h2>
+		The app reads from an XML file as the primary source of data.
+		Check out demo.xml in the same directory as this document.
+		Essentially, it contains a list of sites as senders.
+		Each one of these sender sites contains a list of receivers.
+		Each one of these receivers contains zero to many plates.
+		The plates can contain as much information as necessary.
+		Note that the order the sender sites appear in does not matter, and sites can be excluded altogether.
+
+		<h2>Map.js Description:</h2>
+		Map.js contains code that serves as the backbone of this application.
+		It controls the UI and handles all user interaction. 
+		Here is a table with descriptions of the functions (excluding inner and class functions) within the file.
+		Note that a "modal" is the UI component that pops up when a marker is double clicked.
+
+		<br>
+		<br>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>Function</th>
+					<th>Returns</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>initialize()</td>
+					<td>void</td>
+					<td>
+						This is the first function to be called when the page is loaded. 
+						It carries out a few significant tasks in this order:
+						<ol>
+							<li>Creates the Google map display</li>
+							<li>Places down the Google maps markers indicating each Photronics site</li>
+							<li>Initializes all event handlers (single/double click on the markers, Toggle All Lines button)</li>
+							<li>Creates all AJAX handlers (most importantly the ajaxRefresh function which refreshes the page every 30 seconds with new data)</li>
+						</ol>
+					</td>
+				</tr>
+				<tr>
+					<td>populateMarkerModal(smartMarker)</td>
+					<td>void</td>
+					<td>
+						Takes a SmartMarker object whose data is used to fill up the modal display.
+						Populates the dbl-click-modal (which pops up when a marker is double clicked) with data.
+						First creates the "Sending" portion of the modal and then the "Receiving" portion.
+					</td>
+				</tr>
+				<tr>
+					<td>toggleBlackLines(blackLinesToggle)</td>
+					<td>blackLinesToggle - set to the opposite value that was passed in</td>
+					<td>
+						Takes a boolean blackLinesToggle which dictates whether to turn all lines on or off.
+						Populates the dbl-click-modal (which pops up when a marker is double clicked) with data.
+						
+						First creates the "Sending" portion of the modal and then the "Receiving" portion.
+					</td>
+				</tr> 
+				<tr>
+					<td>onPolylines(smartMarker)</td>
+					<td>void</td>
+					<td>
+						Takes a SmartMarker object and turns on all the polylines (the lines on the map which indicate data transfers)
+						Populates the dbl-click-modal (which pops up when a marker is double clicked) with data.
+					</td>
+				</tr>
+				<tr>
+					<td>midpoint(coordArr)</td>
+					<td>google.maps.LatLng</td>
+					<td>
+						Takes an array of two LatLng objs and returns a new LatLng midpoint.
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h2>SmartMarker Class Description:</h2>
+
+		SmartMarker is a class in map.js that wraps the google.maps.Marker class to provide additional functionality for this app.
+		Extending the Marker class as my own allowed me to handle the display of data in a manageable way.
+
+		<br>
+		<br>
+		<h4>Instance Variables</h4>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Type</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>marker</td>
+					<td>google.maps.Marker</td>
+					<td>The google maps marker at the specified coordinates.</td>
+				</tr>
+				<tr>
+					<td>title</td>
+					<td>String</td>
+					<td>The three letter acronym for a site e.g. BRK for Brookfield.</td>
+				</tr>
+				<tr>
+					<td>name</td>
+					<td>String</td>
+					<td>The full name of a site e.g. Brookfield.</td>
+				</tr>
+				<tr>
+					<td>infobox</td>
+					<td>InfoBox</td>
+					<td>Used to overlay the sending/receiving counts next to each marker on the map.</td>
+				</tr>
+				<tr>
+					<td>senders</td>
+					<td>Number</td>
+					<td>The total number of plates that are being sent from this site.</td>
+				</tr>
+				<tr>
+					<td>receivers</td>
+					<td>Number</td>
+					<td>The total number of plates that are being received at this site.</td>
+				</tr>
+				<tr>
+					<td>sendersArr</td>
+					<td>Array</td>
+					<td>Contains the polylines for sending plates from this site, along with additional data.</td>
+				</tr>
+				<tr>
+					<td>receiversArr</td>
+					<td>Array</td>
+					<td>Contains the polylines for the receiving plates at this site, along with additional data.</td>
+				</tr>
+				<tr>
+					<td>sendersQueue</td>
+					<td>Array</td>
+					<td>
+						Represents the queue of plates being sent from this site.
+						Used to populate the modal that appears on marker double click.
+					 	Each object literal in this array contains a wealth of information pertaining to each plate.
+					 </td>
+				</tr>
+				<tr>
+					<td>sendersQueue</td>
+					<td>Array</td>
+					<td>
+						Represents the queue of plates being sent from this site.
+						Used to populate the modal that appears on marker double click.
+					 	Each object literal in this array contains a wealth of information pertaining to each plate.
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+
+		<h4>Methods</h4>
+
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>Method</th>
+					<th>Returns</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>clear()</td>
+					<td>void</td>
+					<td>Clears the contents of the sending/receiving arrays and counts.</td>
+				</tr>
+				<tr>
+					<td>_updateInfoBox()</td>
+					<td>void</td>
+					<td>Updates the InfoBox overlay (the sending/receiving numbers next to each marker). Intended as a private method.</td>
+				</tr>
+				<tr>
+					<td>refresh(receiver, plate)</td>
+					<td>void</td>
+					<td>
+						Given a plate and its receiver, refresh the instance variables of this SmartMarker instance and the receiver.
+						Inserts the plate in the appropriate index of the queues for proper display.
+					</td>
+				</tr>
+				<tr>
+					<td>createSenderPolyline(receiver, count, failure)</td>
+					<td>google.maps.Polyline</td>
+					<td>
+						Creates the sending polyline colored by the SENDING color.
+						If the failure parameter is true, set the line's color to the FAILURE color.
+					</td>
+				</tr>
+				<tr>
+					<td>createReceiverPolyline(receiver, count, failure)</td>
+					<td>google.maps.Polyline</td>
+					<td>
+						Creates the receiving polyline colored by the RECEIVING color.
+						If the failure parameter is true, set the line's color to the FAILURE color.
+					</td>
+				</tr>
+				<tr>
+					<td>_createLine(color, offset, coordArr, receiver, count)</td>
+					<td>google.maps.Polyline</td>
+					<td>
+						Private helper method which creates the line for the createSenderPolyline and createReceiverPolyline methods.
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div id="footer">Developed by Alex Tatusko in summer 2014, feel free to email me at alex.tatusko@gmail.com if you have questions.</div>
+	</body>
+</html>
