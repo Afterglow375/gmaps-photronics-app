@@ -1,2 +1,1 @@
-gmaps-photronics-app
-====================
+The web application I developed for my summer 2014 internship at Photronics Inc. This webapp allows a user to view the various data transfers among global sites at Photronics, relying on the Google Maps API V3 to do so. The app refreshes its data every 30 seconds via AJAX, providing a pseudo-real time view of the transfers. 
